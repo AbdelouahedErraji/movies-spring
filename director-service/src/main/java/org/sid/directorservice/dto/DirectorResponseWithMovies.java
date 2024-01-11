@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class DirectorResponseWithMovies {
+    private Long id;
     private String name;
     private List<Movie> movies;
 }

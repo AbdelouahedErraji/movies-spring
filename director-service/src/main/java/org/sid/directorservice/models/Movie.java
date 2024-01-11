@@ -7,6 +7,5 @@ import lombok.NoArgsConstructor;
 @Data @NoArgsConstructor @AllArgsConstructor
 public class Movie {
     private String title;
-    private int seats;
-    private double price;
+    private String image;
 }

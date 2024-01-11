@@ -9,9 +9,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class MovieMapper {
     public MovieResponse movieToResponse(Movie movie) {
-        MovieResponse movieResponse = new MovieResponse();
-        BeanUtils.copyProperties(movie, movieResponse);
-        return movieResponse;
+        return MovieResponse.builder()
+                .id(movie.getId())
+                .title(movie.getTitle())
+                .seats(movie.getSeats())
+                .price(movie.getPrice())
+                .director(movie.getDirector())
+                .image(movie.getImage())
+                .build();
     }
 
     public Movie requestToMovie(MovieRequest movieRequest) {

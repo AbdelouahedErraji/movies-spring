@@ -7,8 +7,10 @@ import org.sid.movieservice.mappers.MovieMapper;
 import org.sid.movieservice.models.Movie;
 import org.sid.movieservice.repository.MovieRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +24,16 @@ public class MovieService {
         this.movieMapper = movieMapper;
     }
 
-    public MovieResponse add(MovieRequest movieRequest) throws IOException {
-        Movie movie = movieMapper.requestToMovie(movieRequest);
+    public MovieResponse add(MovieRequest movieRequest, MultipartFile image) throws IOException {
+//        Movie movie = movieMapper.requestToMovie(movieRequest);
+        byte[] imageByteArray = image.getBytes();
+        Movie movie = Movie.builder()
+                .title(movieRequest.getTitle())
+                .seats(movieRequest.getSeats())
+                .price(movieRequest.getPrice())
+                .director(movieRequest.getDirector())
+                .image(Base64.getEncoder().encodeToString(imageByteArray))
+                .build();
         movieRepository.save(movie);
         return movieMapper.movieToResponse(movie);
     }
@@ -47,7 +57,7 @@ public class MovieService {
         return movies.stream().map(movieMapper::movieToResponse).toList();
     }
 
-    public MovieResponse update(Long id, MovieRequest movieRequest) {
+    public MovieResponse update(Long id, MovieRequest movieRequest, MultipartFile image) throws IOException {
         Optional<Movie> movieOptional = movieRepository.findById(id);
         Movie movie;
         if(movieOptional.isPresent()) {
@@ -56,6 +66,10 @@ public class MovieService {
             movie.setPrice(movieRequest.getPrice() != null ? movieRequest.getPrice() : movie.getPrice());
             movie.setTitle(movieRequest.getTitle() != null ? movieRequest.getTitle() : movie.getTitle());
             movie.setDirector(movieRequest.getDirector() != null ? movieRequest.getDirector() : movie.getDirector());
+            if(image != null) {
+                byte[] imageByteArray = image.getBytes();
+                movie.setImage(Base64.getEncoder().encodeToString(imageByteArray));
+            }
             movieRepository.save(movie);
             return movieMapper.movieToResponse(movie);
         } else {

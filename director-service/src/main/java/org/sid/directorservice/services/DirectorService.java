@@ -34,20 +34,21 @@ public class DirectorService {
         return directorMapper.directorToResponse(director);
     }
 
+    public DirectorResponseWithMovies getDirectorWithMovies(Long id) {
+        Optional<Director> directorOptional = directorRepository.findById(id);
+        if(directorOptional.isPresent()) {
+            Director director = directorOptional.get();
+            return directorMoviesList(director);
+        } else {
+            throw new EntityNotFoundException("Director not found");
+        }
+    }
+
     public List<DirectorResponseWithMovies> getAllWithMovies() {
         List<Director> directors = directorRepository.findAll();
         List<DirectorResponseWithMovies> responses = new ArrayList<>();
         directors.forEach(director -> {
-            Movie[] movies = webClient.get()
-                    .uri("http://localhost:8080/api/movies/" + director.getName())
-                    .retrieve()
-                    .bodyToMono(Movie[].class)
-                    .block();
-            DirectorResponseWithMovies directorResponse = new DirectorResponseWithMovies();
-            assert movies != null;
-            directorResponse.setMovies(Arrays.stream(movies).toList());
-            directorResponse.setName(director.getName());
-            responses.add(directorResponse);
+            responses.add(directorMoviesList(director));
         });
         return responses;
     }
@@ -71,5 +72,19 @@ public class DirectorService {
 
     public void delete(Long id) {
         directorRepository.deleteById(id);
+    }
+
+    private DirectorResponseWithMovies directorMoviesList(Director director) {
+        Movie[] movies = webClient.get()
+                .uri("http://localhost:8080/api/movies/" + director.getName())
+                .retrieve()
+                .bodyToMono(Movie[].class)
+                .block();
+        DirectorResponseWithMovies directorResponse = new DirectorResponseWithMovies();
+        assert movies != null;
+        directorResponse.setId(director.getId());
+        directorResponse.setMovies(Arrays.stream(movies).toList());
+        directorResponse.setName(director.getName());
+        return directorResponse;
     }
 }

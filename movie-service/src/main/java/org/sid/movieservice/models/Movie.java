@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.Length;
 
 @Entity
 @Builder
@@ -17,4 +18,6 @@ public class Movie {
     private int seats;
     private double price;
     private String director;
+    @Lob @Column(columnDefinition = "LONGTEXT")
+    private String image;
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/directors")
 public class DirectorController {
     private final DirectorService directorService;
@@ -24,6 +25,11 @@ public class DirectorController {
     @GetMapping
     public List<DirectorResponse> getAll() {
         return directorService.getAll();
+    }
+
+    @GetMapping("/movies/{director_id}")
+    public DirectorResponseWithMovies getDirectorWithMovies(@PathVariable("director_id") Long director_id) {
+        return directorService.getDirectorWithMovies(director_id);
     }
 
     @GetMapping("/movies")
