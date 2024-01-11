@@ -1,0 +1,60 @@
+services:
+  mysql_db:
+    image: mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=movie-service
+    volumes:
+      - mysql-data:/data/db
+    networks:
+      my-network:
+
+  movie-service:
+    image: abdelouahederraji/movie-service:v1.0
+    ports:
+      - 8080:8080
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysql_db:3306/movie-service?createDatabaseIfNotExist=true
+    depends_on:
+      - mysql_db
+    networks:
+      my-network:
+
+  director-service:
+    image: abdelouahederraji/director-service:v1.0
+    ports:
+      - 8081:8081
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysql_db:3306/director-service?createDatabaseIfNotExist=true
+    depends_on:
+      - mysql_db
+    networks:
+      my-network:
+
+#  movie-service:
+#    build:
+#      dockerfile: Dockerfile
+#    ports:
+#      - 8080:8080
+#    environment:
+#      - spring.datasource.url=jdbc:mysql://mysql_db:3306/movie-service?createDatabaseIfNotExist=true
+#    depends_on:
+#      - mysql_db
+
+#  director-service:
+#    build:
+#      dockerfile: ../director-service/Dockerfile
+#    ports:
+#      - 8081:8081
+#    environment:
+#      - spring.datasource.url=jdbc:mysql://mysql_db:3306/director-service?createDatabaseIfNotExist=true
+#    depends_on:
+#      - mysql_db
+
+volumes:
+  mysql-data:
+
+networks:
+  my-network:
