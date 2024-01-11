@@ -18,6 +18,4 @@ public class Movie {
     private int seats;
     private double price;
     private String director;
-    @Lob @Column(columnDefinition = "LONGTEXT")
-    private String image;
 }

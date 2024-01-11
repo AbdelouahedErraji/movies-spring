@@ -12,11 +12,9 @@ public class MovieMapper {
         return MovieResponse.builder()
                 .id(movie.getId())
                 .title(movie.getTitle())
-                .seats(movie.getSeats())
                 .price(movie.getPrice())
-                .director(movie.getDirector())
-                .image(movie.getImage())
-                .build();
+                .seats(movie.getSeats())
+                .director(movie.getDirector()).build();
     }
 
     public Movie requestToMovie(MovieRequest movieRequest) {

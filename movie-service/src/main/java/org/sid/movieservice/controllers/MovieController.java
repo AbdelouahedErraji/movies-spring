@@ -31,31 +31,13 @@ public class MovieController {
     }
 
     @PostMapping
-    public MovieResponse addMovie(@RequestParam("title") String title,
-                                  @RequestParam("director") String director,
-                                  @RequestParam("price") double price,
-                                  @RequestParam("seats") int seats,
-                                  @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
-        MovieRequest movieRequest = new MovieRequest();
-        movieRequest.setDirector(director);
-        movieRequest.setSeats(seats);
-        movieRequest.setPrice(price);
-        movieRequest.setTitle(title);
-        return movieService.add(movieRequest, image);
+    public MovieResponse addMovie(@RequestBody MovieRequest movieRequest) {
+        return movieService.add(movieRequest);
     }
 
     @PutMapping("/update/{id}")
-    public MovieResponse updateMovie(@PathVariable("id")Long id, @RequestParam(value = "title", required = false) String title,
-                                     @RequestParam(value = "director", required = false) String director,
-                                     @RequestParam(value = "price", required = false) Double price,
-                                     @RequestParam(value = "seats", required = false) Integer seats,
-                                     @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
-        MovieRequest movieRequest = new MovieRequest();
-        movieRequest.setTitle(title);
-        movieRequest.setPrice(price);
-        movieRequest.setSeats(seats);
-        movieRequest.setDirector(director);
-        return movieService.update(id, movieRequest, image);
+    public MovieResponse updateMovie(@PathVariable("id")Long id, @RequestBody MovieRequest movieRequest) {
+        return movieService.update(id, movieRequest);
     }
 
     @DeleteMapping("/delete/{id}")
